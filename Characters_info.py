@@ -97,7 +97,7 @@ class Swap(Wizard):
         if swap_power:
             self.power, enemy.power = enemy.power, self.power
 
-class Zombie(Character)
+class Zombie(Character):
     def __init__(self):
         self.name = 'zombie'
         self.health = 20
@@ -134,6 +134,9 @@ class Battle(object):
             enemy.attack(hero)
         if hero.alive():
             print("You defeated the %s" % enemy.name)
+            print("The %s has dropped %d coins" % (enemy.name, enemy.bounty))
+            hero.coins += enemy.bounty
+            print("You now have %d coins" % hero.coins)
             return True
         else:
             print("YOU LOSE!")
