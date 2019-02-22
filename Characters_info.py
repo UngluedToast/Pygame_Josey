@@ -1,5 +1,20 @@
 import random
 import time
+def gamestart():
+    print("=======================")
+    print("=======greetings=======")
+    print("=Please choose a class=")
+    print("====== 1. Squire ======")
+    print("====== 2. Cleric ======")
+    print("=======================")
+    classes = [1 , 2]
+    for choice in classes:
+        choice = input("1 or 2: ")
+        if choice == 1:
+            Player = Squire
+        elif choice == 2:
+            Player = Cleric
+
 
 
 class Character(object):
@@ -105,11 +120,22 @@ class Zombie(Character):
         self.evade = 0.0
         self.bounty = 10
 
+class Bandit(Character):
+    def __init__(self):
+        self.name = 'bandit'
+        self.health = 12
+        self.power = 3
+        self.evade = 0.4
+        self.bounty = 20
+
+
 class Battle(object):
     def do_battle(self, hero, enemy):
         print("=====================")
         print("Hero faces the %s" % enemy.name)
         print("=====================")
+        if enemy.name == Zombie:
+            print('You are unsure if you can kill this creature for good yet')
         while hero.alive() and enemy.alive():
             hero.print_status()
             enemy.print_status()
@@ -142,12 +168,26 @@ class Battle(object):
             print("YOU LOSE!")
             return False
 
+
+
+
+
+
+class Armor(object):
+    cost = 30
+    name = 'armor'
+    def apply(self, hero):
+        character.armor += 2
+        print("%s's armor value has incread by two, armor reduces incoming damage by a set amount" % (hero.name))
+
+
 class Tonic(object):
     cost = 5
     name = 'tonic'
     def apply(self, character):
         character.health += 2
         print("%s's health increased to %d." % (character.name, character.health))
+
 
 class Sword(object):
     cost = 10
@@ -181,10 +221,11 @@ class Store(object):
                 hero.buy(item)
 
 hero = Hero()
-enemies = [Goblin(), Wizard()]
+enemies = [Goblin(), Wizard(), Bandit()]
 battle_engine = Battle()
 shopping_engine = Store()
 
+gamestart()
 for enemy in enemies:
     hero_won = battle_engine.do_battle(hero, enemy)
     if not hero_won:
