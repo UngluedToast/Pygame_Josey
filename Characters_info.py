@@ -7,8 +7,8 @@ def gamestart():
     print("====== 1. Squire ======")
     print("====== 2. Cleric ======")
     print("=======================")
-    classes = [1 , 2]
-    for choice in classes:
+    Player = (Hero, Cleric)
+    for choice in Player:
         choice = input("1 or 2: ")
         if choice == 1:
             Player = Squire
@@ -31,7 +31,11 @@ class Character(object):
         if not self.alive():
             return
         print("%s attacks %s" % (self.name, enemy.name))
-        enemy.receive_damage(self.power)
+        if random.random() < enemy.evade:
+            enemy.recieve_damage = False
+            print("%s has evaded the attack" % (enemy.name))
+        else:
+            enemy.receive_damage(self.power)
         time.sleep(1.5)
 
     def receive_damage(self, points):
@@ -85,6 +89,7 @@ class Shadow(Character):
         self.health = 1
         self.power = 3
         self.evade = 0.9
+        self.bounty = 20
 
 class Goblin(Character):
     def __init__(self):
@@ -127,6 +132,13 @@ class Bandit(Character):
         self.power = 3
         self.evade = 0.4
         self.bounty = 20
+
+class Giant(Character):
+    def __init__(self):
+        self.name = 'giant'
+        self.health = 12
+        self.power = 3
+        self.evade = 0.4
 
 
 class Battle(object):
