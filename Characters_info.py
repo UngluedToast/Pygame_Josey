@@ -7,13 +7,15 @@ def gamestart():
     print("====== 1. Squire ======")
     print("====== 2. Cleric ======")
     print("=======================")
-    Player = (Hero, Cleric)
-    for choice in Player:
-        choice = input("1 or 2: ")
-        if choice == 1:
-            Player = Squire
-        elif choice == 2:
-            Player = Cleric
+    choices = [Squire, Cleric]
+    # for choice in Player:
+    choice = int(input())
+        # if choice == 1:
+        #     Player = Squire
+        # elif choice == 2:
+        #     Player = Cleric
+    return choices[choice - 1]
+
 
 
 
@@ -23,6 +25,8 @@ class Character(object):
         self.health = 10
         self.power = 5
         self.coins = 20
+        self.evade = 0
+        self.armor = 0
 
     def alive(self):
         return self.health > 0
@@ -47,7 +51,7 @@ class Character(object):
     def print_status(self):
         print("%s has %d health and %d power." % (self.name, self.health, self.power))
 
-class Hero(Character):
+class Squire(Character):
     def __init__(self):
         self.name = 'Bill'
         self.health = 10
@@ -55,15 +59,16 @@ class Hero(Character):
         self.coins = 10
         self.evade = 0.1
         self.heal = 0.0
-        Choose_Hero = "A lowley squire, with allegiances to a ruined house, seeking greater glory."
+        self.armor = 0
+        Choose_Squire = "A lowley squire, with allegiances to a ruined house, seeking greater glory."
     def restore(self):
         self.health = 10
-        print("Hero's heath is restored to %d!" % self.health)
+        print("Squire's heath is restored to %d!" % self.health)
         time.sleep(1)
 
     def buy(self, item):
         self.coins -= item.cost
-        item.apply(hero)
+        item.apply(squire)
 
 class Cleric(Character):
     def __init__(self):
@@ -73,15 +78,16 @@ class Cleric(Character):
         self.coins = 20
         self.evade = 0.05
         self.heal = 0.25
+        self.armor = 0
         Choose_Medic = "His faith is his shield. Pius and viggillant, he goes forward with his healing gifts"
     def restore(self):
         self.health = 14
-        print("Hero's heath is restored to %d!" % self.health)
+        print("Cleric's heath is restored to %d!" % self.health)
         time.sleep(1)
     
     def buy(self, item):
         self.coins -= item.cost
-        item.apply(hero)
+        item.apply(Cleric)
 
 class Shadow(Character):
     def __init__(self):
@@ -94,7 +100,7 @@ class Shadow(Character):
 class Goblin(Character):
     def __init__(self):
         self.name = 'goblin'
-        self.health = 6
+        self.health = 10
         self.power = 2
         self.evade = 0.05
         self.bounty = 4
@@ -130,26 +136,26 @@ class Bandit(Character):
         self.name = 'bandit'
         self.health = 12
         self.power = 3
-        self.evade = 0.4
+        self.evade = 0.25
         self.bounty = 20
 
 class Giant(Character):
     def __init__(self):
         self.name = 'giant'
-        self.health = 12
-        self.power = 3
-        self.evade = 0.4
+        self.health = 40
+        self.power = 5
+        self.evade = 0.0
 
 
 class Battle(object):
-    def do_battle(self, hero, enemy):
+    def do_battle(self, Squire, enemy):
         print("=====================")
-        print("Hero faces the %s" % enemy.name)
+        print("%s faces the %s" % (squire.name, enemy.name))
         print("=====================")
         if enemy.name == Zombie:
             print('You are unsure if you can kill this creature for good yet')
-        while hero.alive() and enemy.alive():
-            hero.print_status()
+        while squire.alive() and enemy.alive():
+            squire.print_status()
             enemy.print_status()
             time.sleep(1.5)
             print("-----------------------")
@@ -160,7 +166,7 @@ class Battle(object):
             print("> ",)
             user_input = int(input())
             if user_input == 1:
-                hero.attack(enemy)
+                squire.attack(enemy)
             elif user_input == 2:
                 pass
             elif user_input == 3:
@@ -169,28 +175,39 @@ class Battle(object):
             else:
                 print("Invalid input %r" % user_input)
                 continue
-            enemy.attack(hero)
-        if hero.alive():
+            enemy.attack(squire)
+        if squire.alive():
             print("You defeated the %s" % enemy.name)
+            time.sleep(1.5)
             print("The %s has dropped %d coins" % (enemy.name, enemy.bounty))
-            hero.coins += enemy.bounty
-            print("You now have %d coins" % hero.coins)
+            squire.coins += enemy.bounty
+            time.sleep(1.5)
+            print("You now have %d coins" % squire.coins)
             return True
         else:
             print("YOU LOSE!")
             return False
 
+class FancyCloak(object):
+    cost = 40
+    name = "fancy cloak"
+    def apply(self, character):
+        character.evade += 0.05
+        print("%s's evade chance has gone up by 5 percent" % squire.name)
 
-
-
-
+class SuperTonic(object):
+    cost = 25
+    name = 'super tonic'
+    def apply(self, character):
+        character.health += 10
+        print("%s's health has increased by 10, you now have %d health" % (squire.name, squire.health))
 
 class Armor(object):
     cost = 30
     name = 'armor'
-    def apply(self, hero):
+    def apply(self, character):
         character.armor += 2
-        print("%s's armor value has incread by two, armor reduces incoming damage by a set amount" % (hero.name))
+        print("%s's armor value has incread by two, armor reduces incoming damage by a set amount" % (squire.name))
 
 
 class Tonic(object):
@@ -204,21 +221,22 @@ class Tonic(object):
 class Sword(object):
     cost = 10
     name = 'sword'
-    def apply(self, hero):
-        hero.power += 2
-        print("%s's power increased to %d." % (hero.name, hero.power))
+    def apply(self, character):
+        squire.power += 2
+        print("%s's power increased to %d." % (squire.name, squire.power))
 
 class Store(object):
     # If you define a variable in the scope of a class:
     # This is a class variable and you can access it like
     # Store.items => [Tonic, Sword]
-    items = [Tonic, Sword]
-    def do_shopping(self, hero):
+    items = [Tonic, Sword, Armor, SuperTonic, FancyCloak]
+    def do_shopping(self, squire):
         while True:
+            time.sleep(1.5)
             print("=====================")
             print("Welcome to the store!")
             print("=====================")
-            print("You have %d coins." % hero.coins)
+            print("You have %d coins." % squire.coins)
             print("What do you want to do?")
             for i in range(len(Store.items)):
                 item = Store.items[i]
@@ -230,19 +248,19 @@ class Store(object):
             else:
                 ItemToBuy = Store.items[user_input - 1]
                 item = ItemToBuy()
-                hero.buy(item)
+                squire.buy(item)
 
-hero = Hero()
-enemies = [Goblin(), Wizard(), Bandit()]
+squire = Squire()
+enemies = [Goblin(), Wizard(), Bandit(), Goblin(), Goblin()]
 battle_engine = Battle()
 shopping_engine = Store()
 
 gamestart()
 for enemy in enemies:
-    hero_won = battle_engine.do_battle(hero, enemy)
-    if not hero_won:
+    squire_won = battle_engine.do_battle(squire, enemy)
+    if not squire_won:
         print("YOU LOSE!")
         exit(0)
-    shopping_engine.do_shopping(hero)
+    shopping_engine.do_shopping(squire)
 
 print("YOU WIN!")
