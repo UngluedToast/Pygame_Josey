@@ -14,14 +14,19 @@ def gamestart():
         #     Player = Squire
         # elif choice == 2:
         #     Player = Cleric
+    name = input("Please choose a name for you character: ")
+    print(name)
     return choices[choice - 1]
+    if choices == 0:
+        print("A lowley squire, with allegiances to a ruined house, seeking recompense.")
+    return(name)
 
 
 
 
 class Character(object):
     def __init__(self):
-        self.name = '<undefined>'
+        self.name = 'undefined'
         self.health = 10
         self.power = 5
         self.coins = 20
@@ -43,8 +48,13 @@ class Character(object):
         time.sleep(1.5)
 
     def receive_damage(self, points):
-        self.health -= points
-        print("%s received %d damage." % (self.name, points))
+        if self.armor >= points:
+            print("Your armor deflects the blow in its entirety")
+        else:
+            self.health -= (points - self.armor)
+            print("%s received %d damage." % (self.name, (points - self.armor)))
+            if self.armor > 0:
+                print("%s aromor deflects some of the blow" % self.name)
         if self.health <= 0:
             print("%s is dead." % self.name)
 
@@ -53,14 +63,13 @@ class Character(object):
 
 class Squire(Character):
     def __init__(self):
-        self.name = 'Bill'
+        self.name = "Ser Vant"
         self.health = 10
         self.power = 5
         self.coins = 10
         self.evade = 0.1
         self.heal = 0.0
-        self.armor = 0
-        Choose_Squire = "A lowley squire, with allegiances to a ruined house, seeking greater glory."
+        self.armor = 1
     def restore(self):
         self.health = 10
         print("Squire's heath is restored to %d!" % self.health)
@@ -79,7 +88,7 @@ class Cleric(Character):
         self.evade = 0.05
         self.heal = 0.25
         self.armor = 0
-        Choose_Medic = "His faith is his shield. Pius and viggillant, he goes forward with his healing gifts"
+        choose_cleric = "His faith is his shield. Pius and viggillant, he goes forward with his healing gifts"
     def restore(self):
         self.health = 14
         print("Cleric's heath is restored to %d!" % self.health)
@@ -96,6 +105,7 @@ class Shadow(Character):
         self.power = 3
         self.evade = 0.9
         self.bounty = 20
+        self.armor = 0
 
 class Goblin(Character):
     def __init__(self):
@@ -104,6 +114,7 @@ class Goblin(Character):
         self.power = 2
         self.evade = 0.05
         self.bounty = 4
+        self.armor = 1
 
 class Wizard(Character):
     def __init__(self):
@@ -112,6 +123,7 @@ class Wizard(Character):
         self.power = 1
         self.evade = 0.05
         self.bounty = 10
+        self.armor = 2
 
 class Swap(Wizard):
     def attack(self, enemy):
@@ -130,6 +142,7 @@ class Zombie(Character):
         self.power = 1
         self.evade = 0.0
         self.bounty = 10
+        self.armor = 0
 
 class Bandit(Character):
     def __init__(self):
@@ -138,6 +151,7 @@ class Bandit(Character):
         self.power = 3
         self.evade = 0.25
         self.bounty = 20
+        self.armor = 3
 
 class Giant(Character):
     def __init__(self):
@@ -145,6 +159,7 @@ class Giant(Character):
         self.health = 40
         self.power = 5
         self.evade = 0.0
+        self.armor = 3
 
 
 class Battle(object):
@@ -225,11 +240,21 @@ class Sword(object):
         squire.power += 2
         print("%s's power increased to %d." % (squire.name, squire.power))
 
+class Lottery(object):
+    cost = 10
+    name = 'Lucky Lotto'
+    def apply(self, character):
+        if random.random() > 0.5:
+            squire.coins += 25
+            print('good luck you have there, you earned more than double on the chance game.')
+        else:
+            print('ooh, bad luck, if you play again you can win.')
+
 class Store(object):
     # If you define a variable in the scope of a class:
     # This is a class variable and you can access it like
     # Store.items => [Tonic, Sword]
-    items = [Tonic, Sword, Armor, SuperTonic, FancyCloak]
+    items = [Tonic, Sword, Armor, SuperTonic, FancyCloak, Lottery]
     def do_shopping(self, squire):
         while True:
             time.sleep(1.5)
@@ -251,7 +276,7 @@ class Store(object):
                 squire.buy(item)
 
 squire = Squire()
-enemies = [Goblin(), Wizard(), Bandit(), Goblin(), Goblin()]
+enemies = [Goblin(), Wizard(), Bandit(), Bandit(), Goblin()]
 battle_engine = Battle()
 shopping_engine = Store()
 
