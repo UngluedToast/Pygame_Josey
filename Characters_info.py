@@ -1,6 +1,19 @@
 import random
 import time
 def gamestart():
+    print("===Graphic design is my passion===")
+    print("/\_/\__       __/\_/\       ")
+    print("\______\_____/______/       ")
+    print("      /.  .  |___________   ")
+    print("     (_'_'_)             \> ")
+    print("        \ | |________/ | |  ")
+    print("        |_|_|        |_|_|  ")
+    print("        /_/_|        /_/_|  ")
+
+
+
+
+
     print("=======================")
     print("=======greetings=======")
     print("=Please choose a class=")
@@ -63,7 +76,7 @@ class Character(object):
 
 class Squire(Character):
     def __init__(self):
-        self.name = "Ser Vant"
+        self.name = 'Ser vant'
         self.health = 10
         self.power = 5
         self.coins = 10
@@ -76,8 +89,11 @@ class Squire(Character):
         time.sleep(1)
 
     def buy(self, item):
-        self.coins -= item.cost
-        item.apply(squire)
+        if self.coins >= cost:
+            self.coins -= item.cost
+            item.apply(squire)
+        elif self.coins > cost:
+            print("You do not have enough money for that.")
 
 class Cleric(Character):
     def __init__(self):
@@ -160,6 +176,9 @@ class Giant(Character):
         self.power = 5
         self.evade = 0.0
         self.armor = 3
+
+class Hobgoblin(Character):
+    def __init__
 
 
 class Battle(object):
@@ -276,7 +295,7 @@ class Store(object):
                 squire.buy(item)
 
 squire = Squire()
-enemies = [Goblin(), Wizard(), Bandit(), Bandit(), Goblin()]
+enemies = [Goblin(), Wizard(), Bandit(), Bandit(), Goblin(), Bandit(), Goblin(), Giant()]
 battle_engine = Battle()
 shopping_engine = Store()
 
