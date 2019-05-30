@@ -1,17 +1,19 @@
 import random
 import time
 def gamestart():
-    print("===Graphic design is my passion===")
-    print("/\_/\__       __/\_/\       ")
-    print("\______\_____/______/       ")
-    print("      /.  .  |___________   ")
-    print("     (_'_'_)             \> ")
-    print("        \ | |________/ | |  ")
-    print("        |_|_|        |_|_|  ")
-    print("        /_/_|        /_/_|  ")
+    print("====Graphic design is my passion====")
+    print("     /\_/\__       __/\_/\          ")
+    print("     \______\_____/______/          ")
+    print("           /.  .  |___________      ")
+    print("     ^    (_'_'_)              \>   ")
+    print("    <+>       \ | |________/ | |    ")
+    print("      \       |_|_|        |_|_|    ")
+    print("   /  | |     /_/_|        /_/_|  \ ")
 
 
 
+
+# this is the bit that runs at the beggining of the game
 
 
     print("=======================")
@@ -27,19 +29,33 @@ def gamestart():
         #     Player = Squire
         # elif choice == 2:
         #     Player = Cleric
-    name = input("Please choose a name for you character: ")
-    print(name)
-    return choices[choice - 1]
-    if choices == 0:
-        print("A lowley squire, with allegiances to a ruined house, seeking recompense.")
-    return(name)
+
+
+    # print(title)
+    # # return choices[choice - 1]
+    # # if choices == 0:
+    # #     print("A lowley squire, with allegiances to a ruined house, seeking recompense.")
+
+
+# class title(object):
+#     def name(self):
+#         self.title = input("Please choose a name for you character: ")
+#         return self.title
+# class title(object):
+#     def name(self):
+#         self.title = input("Please choose a name for you character: ")
+#         return self.title
+
+# namechoice()
+
+title = input("Please choose a name for you character: ")
 
 
 
 
 class Character(object):
     def __init__(self):
-        self.name = 'undefined'
+        self.name = {}
         self.health = 10
         self.power = 5
         self.coins = 20
@@ -52,9 +68,11 @@ class Character(object):
     def attack(self, enemy):
         if not self.alive():
             return
+        print('******************')
         print("%s attacks %s" % (self.name, enemy.name))
         if random.random() < enemy.evade:
             enemy.recieve_damage = False
+            print('******************')
             print("%s has evaded the attack" % (enemy.name))
         else:
             enemy.receive_damage(self.power)
@@ -62,21 +80,26 @@ class Character(object):
 
     def receive_damage(self, points):
         if self.armor >= points:
+            print('******************')
             print("Your armor deflects the blow in its entirety")
         else:
             self.health -= (points - self.armor)
+            print('******************')
             print("%s received %d damage." % (self.name, (points - self.armor)))
             if self.armor > 0:
-                print("%s aromor deflects some of the blow" % self.name)
-        if self.health <= 0:
+                print('******************')
+                print("%s's armor deflects some of the blow" % self.name)
+        if self.health <= 0: 
+            print('******************')
             print("%s is dead." % self.name)
 
     def print_status(self):
+        print('******************')
         print("%s has %d health and %d power." % (self.name, self.health, self.power))
 
 class Squire(Character):
     def __init__(self):
-        self.name = 'Ser vant'
+        self.name = title
         self.health = 10
         self.power = 5
         self.coins = 10
@@ -89,10 +112,11 @@ class Squire(Character):
         time.sleep(1)
 
     def buy(self, item):
-        if self.coins >= cost:
+        if self.coins >= item.cost:
             self.coins -= item.cost
             item.apply(squire)
-        elif self.coins > cost:
+            print('you have pruchased a %s', (item.name))
+        elif self.coins < item.cost:
             print("You do not have enough money for that.")
 
 class Cleric(Character):
@@ -104,10 +128,10 @@ class Cleric(Character):
         self.evade = 0.05
         self.heal = 0.25
         self.armor = 0
-        choose_cleric = "His faith is his shield. Pius and viggillant, he goes forward with his healing gifts"
+        choose_cleric = "The faith is his shield. Pius and viggillant, he goes forward with his healing gifts"
     def restore(self):
         self.health = 14
-        print("Cleric's heath is restored to %d!" % self.health)
+        print("Cleric's health is restored to %d!" % self.health)
         time.sleep(1)
     
     def buy(self, item):
@@ -130,7 +154,7 @@ class Goblin(Character):
         self.power = 2
         self.evade = 0.05
         self.bounty = 4
-        self.armor = 1
+        self.armor = 0
 
 class Wizard(Character):
     def __init__(self):
@@ -175,10 +199,18 @@ class Giant(Character):
         self.health = 40
         self.power = 5
         self.evade = 0.0
-        self.armor = 3
+        self.bounty = 50
+        self.armor = 2
 
 class Hobgoblin(Character):
-    def __init__
+    def __init__(self):
+        self.name = 'Hobgoblin'
+        self.health = 20
+        self.power = 4
+        self.evade = 0.05
+        self.bounty = 30
+        self.armor = 4
+
 
 
 class Battle(object):
@@ -267,7 +299,7 @@ class Lottery(object):
             squire.coins += 25
             print('good luck you have there, you earned more than double on the chance game.')
         else:
-            print('ooh, bad luck, if you play again you can win.')
+            print("spot of bad luck there, how about you try again?")
 
 class Store(object):
     # If you define a variable in the scope of a class:
